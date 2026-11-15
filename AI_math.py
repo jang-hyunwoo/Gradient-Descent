@@ -46,7 +46,7 @@ p = p / n
 q = q / n
 r = r / n
 
-st.info(f'손실함수: E(a) = {p}a² + ({q})a + {r}')
+st.info(f'손실함수: E(a) = {p}a² - {-q}a + {r}')
 
 # 학습 설정
 a = st.number_input(
