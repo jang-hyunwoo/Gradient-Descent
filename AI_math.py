@@ -7,7 +7,7 @@ st.title('🧮 경사하강법 기반 추세선 계산')
 n = st.number_input(
     '데이터의 개수를 입력하시오:',
     min_value=1,
-    value=None,
+    value=3,
     step=1
 )
 
@@ -18,7 +18,7 @@ for i in range(n):
     x_value = st.number_input(
         f'{i+1}번째 데이터의 x값을 입력하시오:',
         min_value=0.0,
-        value=None,
+        value=0.0,
         format='%.2f',
         key=f'x_{i}'
     )
@@ -26,7 +26,7 @@ for i in range(n):
     y_value = st.number_input(
         f'{i+1}번째 데이터의 y값을 입력하시오:',
         min_value=0.0,
-        value=None,
+        value=0.0,
         format='%.2f',
         key=f'y_{i}'
     )
@@ -52,15 +52,15 @@ st.write(f'손실함수: E(a) = {p}a² + ({q})a + {r}')
 # 학습 설정
 a = st.number_input(
     '초깃값을 입력하시오:',
-    value=None,
+    value=0.0,
     format='%.2f'
 )
 
 eta = st.number_input(
     '학습률을 입력하시오:',
     min_value=0.0,
-    value=None,
-    format='%.6f'
+    value=0.01,
+    format='%.2f'
 )
 
 # 버튼을 눌렀을 때 실행
@@ -70,10 +70,10 @@ if st.button('경사하강법 실행'):
         st.error('x값 중 적어도 하나는 0보다 커야 합니다.')
 
     elif eta <= 0:
-        st.error('학습률을 양수인 값으로 입력하시오')
+        st.error('학습률을 양수인 값으로 입력하시오.')
 
     elif eta >= 1 / p:
-        st.error(f'학습률을 {1/p} 미만인 값으로 입력하시오')
+        st.error(f'학습률을 {1/p} 미만인 값으로 입력하시오.')
 
     else:
         cnt = 0
@@ -108,4 +108,6 @@ if st.button('경사하강법 실행'):
             st.success(f'최종 손실함수 값: {loss}')
             st.success(f'최종 미분값의 절댓값: {abs(2 * p * a + q)}')
         else:
-            st.warning('최대 반복 횟수에 도달했으나 종료 기준을 만족하지 못했습니다.')
+            st.warning(
+                '최대 반복 횟수에 도달했으나 종료 기준을 만족하지 못했습니다.'
+            )
