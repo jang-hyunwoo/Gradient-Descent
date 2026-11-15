@@ -48,7 +48,7 @@ p = p / n
 q = q / n
 r = r / n
 
-st.info(f'손실함수: E(a) = {p}a² - {-q}a + {r}')
+st.info(f'손실함수: E(a) = {p:.2f}a² - {-q:.2f}a + {r:.2f}')
 
 # 학습 설정
 a = st.number_input(
@@ -113,7 +113,7 @@ if st.button('경사하강법 실행'):
 
         # 수렴한 경우에만 최종 결과 출력
         st.write(f'총 업데이트 횟수: {cnt}번')
-        st.write(f'최종 추세선: f(x) = {a}x')
+        st.write(f'최종 추세선: f(x) = {a:.2f}x')
 
         # 그래프 범위 설정
         a_min = min(min(a for cnt, a, loss in history), -q / (2 * p)) - 1
@@ -238,6 +238,10 @@ if st.button('경사하강법 실행'):
             }
         )
 
+        st.caption(
+            '마우스 휠: 확대·축소 | 드래그: 그래프 이동 | '
+            '상단 +/− 버튼: 확대·축소 | 더블클릭: 원래 범위로 복원'
+        )
         st.caption(
             '마우스 휠: 확대·축소 | 드래그: 그래프 이동 | '
             '상단 +/− 버튼: 확대·축소 | 더블클릭: 원래 범위로 복원'
