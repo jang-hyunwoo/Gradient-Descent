@@ -20,7 +20,6 @@ for i in range(n):
         min_value=0.0,
         value=0.0,
         format='%.2f',
-        key=f'x_{i}'
     )
 
     y_value = st.number_input(
@@ -28,7 +27,6 @@ for i in range(n):
         min_value=0.0,
         value=0.0,
         format='%.2f',
-        key=f'y_{i}'
     )
 
     data.append((x_value, y_value))
@@ -47,7 +45,7 @@ p = p / n
 q = q / n
 r = r / n
 
-st.write(f'손실함수: E(a) = {p}a² + ({q})a + {r}')
+st.info(f'손실함수: E(a) = {p}a² + ({q})a + {r}')
 
 # 학습 설정
 a = st.number_input(
@@ -69,7 +67,7 @@ if st.button('경사하강법 실행'):
     if p == 0:
         st.error('x값 중 적어도 하나는 0보다 커야 합니다.')
 
-    elif eta <= 0:
+    elif eta == 0:
         st.error('학습률을 양수인 값으로 입력하시오.')
 
     elif eta >= 1 / p:
@@ -108,6 +106,4 @@ if st.button('경사하강법 실행'):
             st.success(f'최종 손실함수 값: {loss}')
             st.success(f'최종 미분값의 절댓값: {abs(2 * p * a + q)}')
         else:
-            st.warning(
-                '최대 반복 횟수에 도달했으나 종료 기준을 만족하지 못했습니다.'
-            )
+            st.warning('최대 반복 횟수에 도달했으나 종료 기준을 만족하지 못했습니다.')
