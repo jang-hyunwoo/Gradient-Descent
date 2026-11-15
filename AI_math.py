@@ -20,6 +20,7 @@ for i in range(n):
         f'{i+1}번째 데이터의 x값을 입력하시오:',
         min_value=0.0,
         value=0.0,
+        step=0.01,
         format='%.2f'
     )
 
@@ -27,6 +28,7 @@ for i in range(n):
         f'{i+1}번째 데이터의 y값을 입력하시오:',
         min_value=0.0,
         value=0.0,
+        step=0.01,
         format='%.2f'
     )
 
@@ -46,12 +48,13 @@ p = p / n
 q = q / n
 r = r / n
 
-st.info(f'손실함수: E(a) = {p}a² - {-q}a + {r}')
+st.info(f'손실함수: E(a) = {p:.2f}a² - {-q:.2f}a + {r:.2f}')
 
 # 학습 설정
 a = st.number_input(
     '초깃값을 입력하시오:',
     value=0.0,
+    step=0.01,
     format='%.2f'
 )
 
@@ -59,6 +62,7 @@ eta = st.number_input(
     '학습률을 입력하시오:',
     min_value=0.0,
     value=0.01,
+    step=0.01,
     format='%.2f'
 )
 
@@ -71,7 +75,7 @@ if st.button('경사하강법 실행'):
         st.error('학습률을 양수인 값으로 입력하시오.')
 
     elif eta >= 1 / p:
-        st.error(f'학습률을 {1/p} 미만인 값으로 입력하시오.')
+        st.error('학습률이 너무 큽니다. 더 작은 양수를 입력하시오.')
 
     else:
         cnt = 0
@@ -101,14 +105,21 @@ if st.button('경사하강법 실행'):
 
         if converged:
             st.success('경사하강법이 종료 기준을 만족하여 수렴하였습니다.')
-            st.success(f'총 업데이트 횟수: {cnt}번')
-            st.success(f'최종 추세선: f(x) = {a}x')
-            st.success(f'최종 손실함수 값: {loss}')
-            st.success(f'최종 미분값의 절댓값: {abs(2 * p * a + q)}')
         else:
             st.warning(
                 '최대 반복 횟수에 도달했으나 종료 기준을 만족하지 못했습니다.'
             )
+
+        # 결과 출력
+        st.write(f'총 업데이트 횟수: {cnt}번')
+        st.write(f'최종 추세선: f(x) = {a:.2f}x')
+        st.write(f'최종 손실함수 값: {loss:.2f}')
+        st.write(f'최종 미분값의 절댓값: {abs(2 * p * a + q):.2f}')
+
+        st.caption(
+            '소수는 화면에 둘째 자리까지만 표시합니다. '
+            '0.00으로 표시되어도 실제 값이 정확히 0인 것은 아닙니다.'
+        )
 
         # 그래프 범위 설정
         a_min = min(min(a for cnt, a, loss in history), -q / (2 * p)) - 1
@@ -122,7 +133,7 @@ if st.button('경사하강법 실행'):
 
         fig = go.Figure()
 
-        # 손실함수 E(a) = pa² + qa + r
+        # 손실함수
         fig.add_trace(go.Scatter(
             x=a_values,
             y=[p * a ** 2 + q * a + r for a in a_values],
@@ -130,27 +141,27 @@ if st.button('경사하강법 실행'):
             name='손실함수 E(a)',
             line=dict(color='royalblue'),
             hovertemplate=(
-                '기울기 a: %{x:.6f}<br>'
-                '손실값 E(a): %{y:.6g}<extra></extra>'
+                '기울기 a: %{x:.2f}<br>'
+                '손실값 E(a): %{y:.2f}<extra></extra>'
             )
         ))
 
-        # history에 저장된 업데이트 이후의 점들
+        # 업데이트된 점들
         fig.add_trace(go.Scatter(
             x=[a for cnt, a, loss in history[1:]],
             y=[loss for cnt, a, loss in history[1:]],
             customdata=[cnt for cnt, a, loss in history[1:]],
             mode='markers',
             name='업데이트된 점',
-            marker=dict(color='orange', size=8),
+            marker=dict(color='orange', size=9),
             hovertemplate=(
                 '업데이트 횟수: %{customdata}번<br>'
-                '기울기 a: %{x:.6f}<br>'
-                '손실값 E(a): %{y:.6g}<extra></extra>'
+                '기울기 a: %{x:.2f}<br>'
+                '손실값 E(a): %{y:.2f}<extra></extra>'
             )
         ))
 
-        # 초기점: history의 첫 번째 기록
+        # 초기점
         fig.add_trace(go.Scatter(
             x=[history[0][1]],
             y=[history[0][2]],
@@ -159,12 +170,12 @@ if st.button('경사하강법 실행'):
             marker=dict(color='green', size=12, symbol='diamond'),
             hovertemplate=(
                 '초기점 (0회)<br>'
-                '기울기 a: %{x:.6f}<br>'
-                '손실값 E(a): %{y:.6g}<extra></extra>'
+                '기울기 a: %{x:.2f}<br>'
+                '손실값 E(a): %{y:.2f}<extra></extra>'
             )
         ))
 
-        # 마지막 점: history의 마지막 기록
+        # 마지막 점
         fig.add_trace(go.Scatter(
             x=[history[-1][1]],
             y=[history[-1][2]],
@@ -174,8 +185,8 @@ if st.button('경사하강법 실행'):
             marker=dict(color='red', size=12, symbol='x'),
             hovertemplate=(
                 '업데이트 횟수: %{customdata}번<br>'
-                '기울기 a: %{x:.6f}<br>'
-                '손실값 E(a): %{y:.6g}<extra></extra>'
+                '기울기 a: %{x:.2f}<br>'
+                '손실값 E(a): %{y:.2f}<extra></extra>'
             )
         ))
 
@@ -183,11 +194,27 @@ if st.button('경사하강법 실행'):
             title='손실함수와 경사하강법 업데이트',
             xaxis_title='기울기 a',
             yaxis_title='손실값 E(a)',
-            template='plotly_white'
+            template='plotly_white',
+            height=600,
+            dragmode='pan',
+            hovermode='closest',
+            xaxis=dict(tickformat='.2f'),
+            yaxis=dict(tickformat='.2f')
         )
 
-        st.plotly_chart(fig)
+        # 그래프 조작 설정
+        st.plotly_chart(
+            fig,
+            config={
+                'scrollZoom': True,
+                'displayModeBar': True,
+                'displaylogo': False,
+                'doubleClick': 'reset',
+                'modeBarButtonsToRemove': ['select2d', 'lasso2d']
+            }
+        )
 
         st.caption(
-            '점들이 겹쳐 보이면 해당 영역을 드래그하여 확대하세요.'
+            '마우스 휠: 확대·축소 | 드래그: 그래프 이동 | '
+            '상단 +/− 버튼: 확대·축소 | 더블클릭: 원래 범위로 복원'
         )
