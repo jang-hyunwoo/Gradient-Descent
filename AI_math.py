@@ -46,8 +46,7 @@ p = p / n
 q = q / n
 r = r / n
 
-if st.button('손실함수 계산'):
-    st.info(f'손실함수: E(a) = {p}a² + ({q})a + {r}')
+st.info(f'손실함수: E(a) = {p}a² + ({q})a + {r}')
 
 # 학습 설정
 a = st.number_input(
@@ -60,7 +59,7 @@ eta = st.number_input(
     '학습률을 입력하시오:',
     min_value=0.0,
     value=0.01,
-    format='%.6f'
+    format='%.2f'
 )
 
 if st.button('경사하강법 실행'):
