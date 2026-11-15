@@ -109,17 +109,12 @@ if st.button('경사하강법 실행'):
             st.warning(
                 '최대 반복 횟수에 도달했으나 종료 기준을 만족하지 못했습니다.'
             )
+            st.stop()
 
-        # 결과 출력
+        # 수렴한 경우에만 최종 결과 출력
         st.write(f'총 업데이트 횟수: {cnt}번')
-        st.write(f'최종 추세선: f(x) = {a:.2f}x')
-        st.write(f'최종 손실함수 값: {loss:.2f}')
-        st.write(f'최종 미분값의 절댓값: {abs(2 * p * a + q):.2f}')
+        st.write(f'최종 추세선: f(x) = {a}x')
 
-        st.caption(
-            '소수는 화면에 둘째 자리까지만 표시합니다. '
-            '0.00으로 표시되어도 실제 값이 정확히 0인 것은 아닙니다.'
-        )
 
         # 그래프 범위 설정
         a_min = min(min(a for cnt, a, loss in history), -q / (2 * p)) - 1
@@ -141,8 +136,8 @@ if st.button('경사하강법 실행'):
             name='손실함수 E(a)',
             line=dict(color='royalblue'),
             hovertemplate=(
-                '기울기 a: %{x:.2f}<br>'
-                '손실값 E(a): %{y:.2f}<extra></extra>'
+                '기울기 a: %{x}<br>'
+                '손실값 E(a): %{y}<extra></extra>'
             )
         ))
 
@@ -156,8 +151,8 @@ if st.button('경사하강법 실행'):
             marker=dict(color='orange', size=9),
             hovertemplate=(
                 '업데이트 횟수: %{customdata}번<br>'
-                '기울기 a: %{x:.2f}<br>'
-                '손실값 E(a): %{y:.2f}<extra></extra>'
+                '기울기 a: %{x}<br>'
+                '손실값 E(a): %{y}<extra></extra>'
             )
         ))
 
@@ -170,8 +165,8 @@ if st.button('경사하강법 실행'):
             marker=dict(color='green', size=12, symbol='diamond'),
             hovertemplate=(
                 '초기점 (0회)<br>'
-                '기울기 a: %{x:.2f}<br>'
-                '손실값 E(a): %{y:.2f}<extra></extra>'
+                '기울기 a: %{x}<br>'
+                '손실값 E(a): %{y}<extra></extra>'
             )
         ))
 
@@ -185,8 +180,8 @@ if st.button('경사하강법 실행'):
             marker=dict(color='red', size=12, symbol='x'),
             hovertemplate=(
                 '업데이트 횟수: %{customdata}번<br>'
-                '기울기 a: %{x:.2f}<br>'
-                '손실값 E(a): %{y:.2f}<extra></extra>'
+                '기울기 a: %{x}<br>'
+                '손실값 E(a): %{y}<extra></extra>'
             )
         ))
 
@@ -197,9 +192,7 @@ if st.button('경사하강법 실행'):
             template='plotly_white',
             height=600,
             dragmode='pan',
-            hovermode='closest',
-            xaxis=dict(tickformat='.2f'),
-            yaxis=dict(tickformat='.2f')
+            hovermode='closest'
         )
 
         # 그래프 조작 설정
