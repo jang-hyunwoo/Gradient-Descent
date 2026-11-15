@@ -102,7 +102,87 @@ if st.button('경사하강법 실행'):
             st.success('경사하강법이 종료 기준을 만족하여 수렴하였습니다.')
             st.success(f'총 업데이트 횟수: {cnt}번')
             st.success(f'최종 추세선: f(x) = {a}x')
-            st.success(f'최종 손실함수 값: {loss}')
-            st.success(f'최종 미분값의 절댓값: {abs(2 * p * a + q)}')
+        
+            # 그래프 범위 설정
+            a_min = min(min(a for cnt, a, loss in history), -q / (2 * p)) - 1
+            a_max = max(max(a for cnt, a, loss in history), -q / (2 * p)) + 1
+    
+            # 손실함수 곡선을 그릴 기울기 값
+            a_values = [
+                a_min + (a_max - a_min) * i / 500
+                for i in range(501)
+            ]
+    
+            fig = go.Figure()
+    
+            # 손실함수 E(a) = pa² + qa + r
+            fig.add_trace(go.Scatter(
+                x=a_values,
+                y=[p * a ** 2 + q * a + r for a in a_values],
+                mode='lines',
+                name='손실함수 E(a)',
+                line=dict(color='royalblue'),
+                hovertemplate=(
+                    '기울기 a: %{x:.6f}<br>'
+                    '손실값 E(a): %{y:.6g}<extra></extra>'
+                )
+            ))
+    
+            # history에 저장된 업데이트 이후의 점들
+            fig.add_trace(go.Scatter(
+                x=[a for cnt, a, loss in history[1:]],
+                y=[loss for cnt, a, loss in history[1:]],
+                customdata=[cnt for cnt, a, loss in history[1:]],
+                mode='markers',
+                name='업데이트된 점',
+                marker=dict(color='orange', size=8),
+                hovertemplate=(
+                    '업데이트 횟수: %{customdata}번<br>'
+                    '기울기 a: %{x:.6f}<br>'
+                    '손실값 E(a): %{y:.6g}<extra></extra>'
+                )
+            ))
+    
+            # 초기점: history의 첫 번째 기록
+            fig.add_trace(go.Scatter(
+                x=[history[0][1]],
+                y=[history[0][2]],
+                mode='markers',
+                name='초기점 (0회)',
+                marker=dict(color='green', size=12, symbol='diamond'),
+                hovertemplate=(
+                    '초기점 (0회)<br>'
+                    '기울기 a: %{x:.6f}<br>'
+                    '손실값 E(a): %{y:.6g}<extra></extra>'
+                )
+            ))
+    
+            # 마지막 점: history의 마지막 기록
+            fig.add_trace(go.Scatter(
+                x=[history[-1][1]],
+                y=[history[-1][2]],
+                customdata=[history[-1][0]],
+                mode='markers',
+                name='마지막 점',
+                marker=dict(color='red', size=12, symbol='x'),
+                hovertemplate=(
+                    '업데이트 횟수: %{customdata}번<br>'
+                    '기울기 a: %{x:.6f}<br>'
+                    '손실값 E(a): %{y:.6g}<extra></extra>'
+                )
+            ))
+    
+            fig.update_layout(
+                title='손실함수와 경사하강법 업데이트',
+                xaxis_title='기울기 a',
+                yaxis_title='손실값 E(a)',
+                template='plotly_white'
+            )
+    
+            st.plotly_chart(fig)
+    
+            st.caption(
+                '점들이 겹쳐 보이면 해당 영역을 드래그하여 확대하세요.'
+            )
         else:
             st.warning('최대 반복 횟수에 도달했으나 종료 기준을 만족하지 못했습니다.')
