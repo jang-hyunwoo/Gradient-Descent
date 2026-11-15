@@ -71,8 +71,11 @@ if st.button('경사하강법 실행'):
     if p == 0:
         st.error('x값 중 적어도 하나는 0보다 커야 합니다.')
 
-    elif eta == 0:
+    elif eta <= 0:
         st.error('학습률을 양수인 값으로 입력하시오.')
+
+    elif eta >= 1 / p:
+        st.error('학습률이 너무 큽니다. 더 작은 양수를 입력하시오.')
 
     else:
         cnt = 0
@@ -106,6 +109,7 @@ if st.button('경사하강법 실행'):
             st.warning(
                 '최대 반복 횟수에 도달했으나 종료 기준을 만족하지 못했습니다.'
             )
+            st.stop()
 
         # 수렴한 경우에만 최종 결과 출력
         st.success(f'총 업데이트 횟수: {cnt}번, 최종 추세선: f(x) = {a:.2f}x')
