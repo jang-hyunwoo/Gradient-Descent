@@ -112,8 +112,7 @@ if st.button('경사하강법 실행'):
             st.stop()
 
         # 수렴한 경우에만 최종 결과 출력
-        st.write(f'총 업데이트 횟수: {cnt}번')
-        st.write(f'최종 추세선: f(x) = {a:.2f}x')
+        st.success(f'총 업데이트 횟수: {cnt}번, 최종 추세선: f(x) = {a:.2f}x')
 
         # 그래프 범위 설정
         a_min = min(min(a for cnt, a, loss in history), -q / (2 * p)) - 1
